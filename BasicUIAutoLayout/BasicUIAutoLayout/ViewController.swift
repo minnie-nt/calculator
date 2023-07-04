@@ -12,28 +12,25 @@ class ViewController: UIViewController {
   
     
     // MARK: - Special tap
+    @IBOutlet weak var calculatorWorkings: UILabel!
     @IBOutlet weak var numberShow: UILabel!
-    @IBOutlet weak var acShow: UIButton!
+    
     var workings: String = ""
-    var hasDot: Bool = false
-    var isNum: Bool = true
     var sym: Symbol? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        allClear()
         // Do any additional setup after loading the view.
     }
     
     @IBAction func equalTap(_ sender: Any) {
         formatPercent()
-        numberShow.text = calculate()
-        isNum = true
+        calculate()
     }
 
     @IBAction func percentTap(_ sender: Any) {
-        if isNum && !workings.isEmpty{
-            setWorkings("%")
-        }
+        setWorkings("%")
     }
     
     @IBAction func acTap(_ sender: Any) {
@@ -42,27 +39,41 @@ class ViewController: UIViewController {
     
     @IBAction func delTap(_ sender: Any) {
         if !workings.isEmpty {
-            del()
+            workings.removeLast()
+            calculatorWorkings.text = workings
         }
     }
     
     // MARK: Functional code
     
-    func setWorkings(_ s: String){
+    func setWorkings(_ s: String) {
         workings = workings + s
-        print(workings)
-        numberShow.text = workings
+        calculatorWorkings.text = workings
     }
     
     func formatPercent() {
         workings =  workings.replacingOccurrences(of: "%", with: "*0.01")
     }
     
-    func calculate() -> String {
-        let expression = NSExpression(format: workings)
-        let result = expression.expressionValue(with: nil, context: nil) as! Double
-        let resultString = formatResult(result: result)
-        return resultString
+    func calculate() {
+        if isValid() {
+            let expression = NSExpression(format: workings)
+            let result = expression.expressionValue(with: nil, context: nil) as! Double
+            let resultString = formatResult(result: result)
+            numberShow.text = resultString
+        } else {
+            callAlert()
+        }
+        
+    }
+    
+    func callAlert() {
+        let alert = UIAlertController(
+            title: "Invalid input",
+            message: "Calculator can not working try again",
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "okay", style: .default))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func formatResult(result: Double) -> String {
@@ -73,15 +84,49 @@ class ViewController: UIViewController {
         }
     }
     
-    func allClear() {
-        numberShow.text = "0"
-        workings = ""
-        hasDot = false
+    func isValid() -> Bool {
+        var count = 0
+        var funcCharIndex = [Int]()
+        for char in workings {
+            if special(char) {
+                funcCharIndex.append(count)
+            }
+            count += 1
+        }
+        
+        var previous = -1
+        for index in funcCharIndex {
+            if index == 0 {
+                return false
+            }
+            if index == workings.count - 1 {
+                return false
+            }
+            if previous != -1 {
+                if index - previous == 1 {
+                    return false
+                }
+            }
+            previous = index
+        }
+        
+        return true
     }
     
-    func del() {
-        workings.removeLast()
-        setWorkings("")
+    func special(_ ch: Character) -> Bool {
+        if let _ = Symbol(rawValue: ch) {
+            return true
+        }
+        if ch == "." {
+            return true
+        }
+        return false
+    }
+    
+    func allClear() {
+        workings = ""
+        calculatorWorkings.text = ""
+        numberShow.text = ""
     }
 
     // MARK: Action Button Tap
@@ -94,41 +139,30 @@ class ViewController: UIViewController {
             case 3: sym = .divide
             default: break
         }
-        
-        if isNum {
-            setWorkings(sym!.rawValue)
-            isNum = false
-        } else {
-            workings.removeLast()
-            setWorkings(sym!.rawValue)
-            isNum = false
-        }
+        setWorkings(String(sym!.rawValue))
     }
 
     @IBAction func onTapNumber(_ sender: UIButton) {
         if let number = sender.titleLabel?.text {
             setWorkings(number)
-            isNum = true
         }
     }
   
     @IBAction func dotTap(_ sender: Any) {
-        if !hasDot && isNum {
-            setWorkings(".")
-            hasDot = true
-            isNum = false
-        }
+        setWorkings(".")
     }
     
 }
 
 // MARK: Model
 extension ViewController {
-    enum Symbol: String {
+    enum Symbol: Character,CaseIterable {
         case plus = "+"
         case minus = "-"
         case multi = "*"
         case divide = "/"
     }
 }
+
+
 

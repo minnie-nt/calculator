@@ -26,10 +26,19 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KC2-j3-HTu">
+                                        <rect key="frame" x="10" y="32" width="373" height="48"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
+                                    <constraint firstItem="tMC-Ev-WEW" firstAttribute="top" secondItem="KC2-j3-HTu" secondAttribute="bottom" constant="8.3333333333333428" id="7XO-QZ-kVy"/>
+                                    <constraint firstItem="KC2-j3-HTu" firstAttribute="leading" secondItem="ZhH-UH-XMx" secondAttribute="leading" constant="10" id="8yb-1a-G93"/>
                                     <constraint firstItem="tMC-Ev-WEW" firstAttribute="centerY" secondItem="ZhH-UH-XMx" secondAttribute="centerY" id="BdF-OT-nxD"/>
+                                    <constraint firstAttribute="trailing" secondItem="KC2-j3-HTu" secondAttribute="trailing" constant="10" id="NIH-zK-Hbu"/>
                                     <constraint firstItem="tMC-Ev-WEW" firstAttribute="leading" secondItem="ZhH-UH-XMx" secondAttribute="leading" constant="10" id="a27-Dd-SJn"/>
                                     <constraint firstAttribute="trailing" secondItem="tMC-Ev-WEW" secondAttribute="trailing" constant="10" id="i0a-ve-2OU"/>
                                 </constraints>
@@ -356,7 +365,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="acShow" destination="6Xg-a4-pLn" id="BEj-KZ-cIR"/>
+                        <outlet property="calculatorWorkings" destination="KC2-j3-HTu" id="EK4-jY-MZF"/>
                         <outlet property="numberShow" destination="tMC-Ev-WEW" id="AzO-O0-C4a"/>
                     </connections>
                 </viewController>
